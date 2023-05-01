@@ -54,7 +54,7 @@ async def processing_qr_code(message: types.Message, state: FSMContext):
 async def processing_qr_code(message: types.Message, state: FSMContext):
     await state.reset_state()
     await message.answer('🔄 <b>ИДЁТ ПЕРЕНАПРАВЛЕНИЕ В ГЛАВНОЕ ОКНО, ПОЖАЛУЙСТА, ПОДОЖДИТЕ...</b> 🔄')
-    time.sleep(1)
+    time.sleep(0.5)
     await message.answer("Вы в главном меню, выберите <b>одно</b> из действий:\n1⃣ - URL\n2⃣ - QRCode",
                          reply_markup=keyboard_menu)
 
@@ -63,7 +63,7 @@ async def processing_qr_code(message: types.Message, state: FSMContext):
 async def processing_url(message: types.Message, state: FSMContext):
     await state.reset_state()
     await message.answer('🔄 <b>ИДЁТ ПЕРЕНАПРАВЛЕНИЕ В ГЛАВНОЕ ОКНО, ПОЖАЛУЙСТА, ПОДОЖДИТЕ...</b> 🔄')
-    time.sleep(1)
+    time.sleep(0.5)
     await message.answer("Вы в главном меню, выберите <b>одно</b> из действий:\n1⃣ - URL\n2⃣ - QRCode",
                          reply_markup=keyboard_menu)
 
@@ -79,7 +79,7 @@ async def solution_url(message: types.Message, state: FSMContext):
         result = check_link(domain)
         time.sleep(1)
         await message.reply(output_table(domain=domain, result=result), reply=False)
-        await state.reset_state()
+        await state.set_state(States.all()[1])
     except:
         try:
             parsed_url = urlparse(url)
@@ -89,10 +89,10 @@ async def solution_url(message: types.Message, state: FSMContext):
             await message.reply(error_ban_url, parse_mode='HTML', reply=False)
             time.sleep(1)
             await message.reply(output_table(domain=domain, result=result), parse_mode="HTML", reply=False)
-            await state.reset_state()
+            await state.set_state(States.all()[1])
         except:
             await message.reply(error_url, parse_mode='HTML', reply=False)
-            await state.reset_state()
+            await state.set_state(States.all()[1])
 
 
 @dp.message_handler(state=States.QR_STATE[0], content_types=['photo'])
@@ -111,7 +111,7 @@ async def solution_qrcode(message: types.Message, state: FSMContext):
             domain = parsed_url.scheme + '://' + parsed_url.netloc + '/'
             result = check_link(domain)
             await message.reply(output_table(domain=domain, result=result), reply=False)
-            await state.reset_state()
+            await state.set_state(States.all()[0])
         except:
             try:
                 time.sleep(1)
@@ -121,13 +121,13 @@ async def solution_qrcode(message: types.Message, state: FSMContext):
                 await message.reply(error_ban_url, parse_mode='HTML', reply=False)
                 time.sleep(1)
                 await message.reply(output_table(domain=domain, result=result), parse_mode='HTML', reply=False)
-                await state.reset_state()
+                await state.set_state(States.all()[0])
             except:
                 await message.reply("<b>⚠️ Ссылка в QR-коде некорректная... ⚠️</b>", parse_mode='HTML', reply=False)
-                await state.reset_state()
+                await state.set_state(States.all()[0])
     except:
         await message.reply(error_qrcode, parse_mode='HTML', reply=False)
-        await state.reset_state()
+        await state.set_state(States.all()[0])
 
 
 if __name__ == '__main__':
