@@ -3,6 +3,8 @@ import socket
 import ssl
 from urllib.parse import urlparse
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import whois
+import datetime
 
 
 def string_similarity(str1, str2):
@@ -88,6 +90,29 @@ def is_unreadable(link):
     return any(char in link for char in ['xn--', 'xn----', 'xn------'])
 
 
+def register_domain(link):
+    """Функция для проверки кол-ва дней с даты регистрации домена"""
+    domain = link
+    w = whois.whois(domain)
+    # получаем дату регистрации
+    registration_date = w.creation_date
+    # если дата регистрации не является списком, преобразуем ее в список
+    if not isinstance(registration_date, list):
+        registration_date = [registration_date]
+        # выбираем первую дату из списка
+        registration_date = registration_date[0]
+        # если дата регистрации неизвестна, выводим сообщение об ошибке
+        if registration_date is None:
+            return "Неизвестно"
+        else:
+            # получаем текущую дату
+            current_date = datetime.datetime.now()
+            # вычисляем количество дней между текущей датой и датой регистрации
+            delta = current_date - registration_date
+            # выводим количество дней
+            return delta.days
+
+
 def check_link(link):
     """Функция для проверки ссылки на различные признаки подозрительности"""
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -99,6 +124,7 @@ def check_link(link):
         'suspicious': is_suspicious(link),
         'suspicious_js': has_suspicious_js(link),
         'Long level': is_long_level(link),
-        'Unreadability': is_unreadable(link)
+        'Unreadability': is_unreadable(link),
+        'register_domain': register_domain(link)
     }
     return stats
