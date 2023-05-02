@@ -2,8 +2,8 @@ import time
 from urllib.parse import urlparse
 from aiogram.utils import executor
 from config import *
-from src.convert_qrcode_to_link import get_link_qr_code
-from src.link_check import check_link
+from convert_qrcode_to_link import get_link_qr_code
+from link_check import check_link
 from aiogram.dispatcher import FSMContext
 from utils import States
 from keyboards import keyboard_start

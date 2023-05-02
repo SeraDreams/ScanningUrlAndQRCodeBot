@@ -5,4 +5,3 @@ class States(Helper):
     mode = HelperMode.snake_case
     URL_STATE = ListItem()
     QR_STATE = ListItem()
-
