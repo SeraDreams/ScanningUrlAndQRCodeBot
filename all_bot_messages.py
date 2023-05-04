@@ -7,14 +7,14 @@ def output_table(domain, result):
     yes, no = '✅', '❌'
     table = \
         f'<b>1⃣ - URL:</b> {domain}\n' \
-        f'<b>2⃣ - Перенаправления:</b>     {no if result["redirect"] == True else yes}\n' \
-        f'<b>3⃣ - Поддержка https:</b>          {yes}\n' \
-        f'<b>4⃣ - SSL сертификат:</b>              {yes if result["ssl"] == True else no}\n' \
-        f'<b>5⃣ - Известный домен:</b>           {no if result["suspicious"] == True else yes}\n' \
+        f'<b>2⃣ - Перенаправления:</b>           {no if result["redirect"] == True else yes}\n' \
+        f'<b>3⃣ - Поддержка https:</b>              {yes if result["https"] == True else no}\n' \
+        f'<b>4⃣ - SSL сертификат:</b>                 {yes if result["ssl"] == True else no}\n' \
+        f'<b>5⃣ - Известный домен:</b>            {no if result["suspicious"] == True else yes}\n' \
         f'<b>6⃣ - Подозрительный JS код:</b> {no if result["suspicious_js"] == False else yes}\n' \
         f'<b>7⃣ - Доменные уровни:</b>           {no if result["Long level"] == True else yes}\n' \
-        f'<b>8⃣ - Читаемый домен:</b>           {no if result["Unreadability"] == True else yes}\n'\
-        f'<b>9⃣ - Кол-во дней со дня регистрации домена: </b>{result["register_domain"]}'
+        f'<b>8⃣ - Читаемый домен:</b>             {no if result["Unreadability"] == True else yes}\n' \
+        f'<b>9⃣ - Кол-во дней с даты регистрации: </b>{"Неизвестна" if result["register_domain"] == False else result["register_domain"]}'
     return table
 
 
